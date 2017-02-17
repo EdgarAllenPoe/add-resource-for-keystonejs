@@ -1,0 +1,322 @@
+<html>
+
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.1/knockout-min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron" style="background-color: #337ab7">
+            <h2>Adding a Resource to a keystone.js App</h2>
+        </div>
+        <h4><label style="width:150px">Resource Name:</label><input data-bind="value: resourceName" /></h4>
+        <h4><label style="width:150px">Menu Name:</label><input data-bind="value: menuName" /></h4>
+        <h4><label style="width:150px">Resource Fields:</label></h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Fieldnames</th>
+                    <th>Values</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input data-bind="value: recordOneName" />
+                    </td>
+                    <td>
+                        <input data-bind="value: recordOneValue" size="100%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input data-bind="value: recordTwoName" />
+                    </td>
+                    <td>
+                        <input data-bind="value: recordTwoValue" size="100%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input data-bind="value: recordThreeName" />
+                    </td>
+                    <td>
+                        <input data-bind="value: recordThreeValue" size="100%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input data-bind="value: recordFourName" />
+                    </td>
+                    <td>
+                        <input data-bind="value: recordFourValue" size="100%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input data-bind="value: recordFiveName" />
+                    </td>
+                    <td>
+                        <input data-bind="value: recordFiveValue" size="100%" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input data-bind="value: recordSixName" />
+                    </td>
+                    <td>
+                        <input data-bind="value: recordSixValue" size="100%" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <h2>Create Model</h2>
+        <h3>New File</h3>
+        <h4>name-of-project/models/<span data-bind="text: upperCaseResourceName"></span>.js</h4>
+        <pre><code>
+var keystone = require('keystone');
+var Types = keystone.Field.Types;
+
+var <span data-bind="text: upperCaseResourceName"></span> = new keystone.List('<span data-bind="text: upperCaseResourceName"></span>', {
+  map: {name: '<span data-bind="text: recordOneNameLowerCase"></span>'},
+  singular:'<span data-bind="text: upperCaseResourceName"></span>',
+  plural: '<span data-bind="text: upperCasePluralResourceName"></span>',
+  autokey: {path: 'slug', from: '<span data-bind="text: recordOneNameLowerCase"></span>', unique: true}
+});
+
+<span data-bind="text: upperCaseResourceName"></span>.add({
+  <span data-bind="text: recordOneNameLowerCase"></span>: <span data-bind="text: recordOneValue"></span>,
+  <span data-bind="text: recordTwoNameLowerCase"></span>: <span data-bind="text: recordTwoValue"></span>,
+  <span data-bind="text: recordThreeNameLowerCase"></span>: <span data-bind="text: recordThreeValue"></span>,
+  <span data-bind="text: recordFourNameLowerCase"></span>: <span data-bind="text: recordFourValue"></span>,
+  <span data-bind="text: recordFiveNameLowerCase"></span>: <span data-bind="text: recordFiveValue"></span>,
+  <span data-bind="text: recordSixNameLowerCase"></span>: <span data-bind="text: recordSixValue"></span>
+});
+
+<span data-bind="text: upperCaseResourceName"></span>.register();
+</code></pre>
+        <h2>Create Controller</h2>
+        <h3>New File</h3>
+        <h4>name-of-project/routes/views/<span data-bind="text: lowerCasePluralResourceName"></span>.js</h4>
+        <pre><code>
+var keystone = require('keystone');
+
+exports = module.exports = function(req, res) {
+  var view = new keystone.View(req, res);
+  var locals = res.locals;
+
+  // Set locals
+  locals.section = '<span data-bind="text: lowerCaseMenuName"></span>';
+
+  // Load <span data-bind="text: upperCasePluralResourceName"></span>
+  view.query('<span data-bind="text: lowerCasePluralResourceName"></span>', keystone.List('<span data-bind="text: upperCaseResourceName"></span>').model.find());
+
+  // Render View
+  view.render('<span data-bind="text: lowerCasePluralResourceName"></span>');
+}
+</code></pre>
+        <h2>Set routes</h2>
+        <h3>Modify File</h3>
+        <h4>name-of-project/route/index.js</h4>
+        <pre><code>
+app.get('/<span data-bind="text: lowerCasePluralResourceName"></span>', routes.views.<span data-bind="text: lowerCasePluralResourceName"></span>);
+app.get('/<span data-bind="text: lowerCasePluralResourceName"></span>/:<span data-bind="text: lowerCaseResourceName"></span>', routes.views.<span data-bind="text: lowerCaseResourceName"></span>);
+</code></pre>
+        <h3>Modify File</h3>
+        <h4>name-of-project/route/middleware.js</h4>
+        <pre><code>
+    { label: '<span data-bind="text: menuName"></span>', key: '<span data-bind="text: lowerCaseMenuName"></span>', href: '/<span data-bind="text: lowerCasePluralResourceName"></span>' },
+</code></pre>
+        <h2>Create View</h2>
+        <h3>New File</h3>
+        <h4>name-of-project/template/views/<span data-bind="text: lowerCasePluralResourceName"></span>.hbs</h4>
+        <pre><code>
+&lt;div class="container"&gt;
+  &lt;h1&gt;<span data-bind="text: upperCasePluralResourceName"></span>&lt;/h1&gt;
+  &lt;div class="row"&gt;
+    &lt;div class="col-md-12 col-lg-12"&gt;
+      &lt;div class="row"&gt;
+        &#123;&#123;&#35; each <span data-bind="text: lowerCasePluralResourceName"></span>&#125;&#125;
+          &lt;div class="col-md-4 col-lg-4"&gt;
+            &lt;h2&gt;&lt;a href="&#123;&#123;<span data-bind="text: lowerCaseResourceName"></span>Url slug&#125;&#125;"&gt;&#123;&#123;&#123;<span data-bind="text: recordOneNameLowerCase"></span>&#125;&#125;&#125;&lt;/a&gt;&lt;/h2&gt;
+            &#123;&#123;&#35;if <span data-bind="text: recordFiveNameLowerCase"></span>&#125;&#125;
+              &lt;img src="&#123;&#123;&#123;cloudinaryUrl <span data-bind="text: recordFiveNameLowerCase"></span> width=160 height=160 crop="fit"&#125;&#125;&#125;" class="thumbnail"&gt;
+            &#123;&#123;/if&#125;&#125;
+          &lt;/div&gt;
+        &#123;&#123;/each&#125;&#125;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+        <h2>Create Controller</h2>
+        <h3>New File</h3>
+        <h4>name-of-project/routes/views/<span data-bind="text: lowerCaseResourceName"></span>.js</h4>
+        <pre><code>
+var keystone = require('keystone');
+
+exports = module.exports = function(req, res) {
+  var view = new keystone.View(req, res);
+  var locals = res.locals;
+
+  // Set locals
+  locals.section = '<span data-bind="text: lowerCaseMenuName"></span>';
+  locals.filters = {
+    <span data-bind="text: lowerCaseResourceName"></span>: req.params.<span data-bind="text: lowerCaseResourceName"></span>
+  }
+  locals.data = {
+    <span data-bind="text: lowerCasePluralResourceName"></span>:[]
+  }
+
+view.on('init', function(next){
+  var q = keystone.list('<span data-bind="text: upperCaseResourceName"></span>').model.findOne({
+    slug: locals.filters.<span data-bind="text: lowerCaseResourceName"></span>
+  });
+
+  q.exec(function(err, result){
+    locals.data.<span data-bind="text: lowerCaseResourceName"></span> = result;
+    next(err);
+  });
+});
+
+  // Render View
+  view.render('<span data-bind="text: lowerCaseResourceName"></span>');
+}
+</code></pre>
+        <h2>Create View</h2>
+        <h3>New File</h3>
+        <h4>name-of-project/template/views/<span data-bind="text: lowerCaseResourceName"></span>.hbs</h4>
+        <pre><code>
+&lt;div class="container"&gt;
+  &lt;div class="row"&gt;
+    &lt;div class="col-md-12 col-lg-12"&gt;
+      &lt;article&gt;
+        &lt;p&gt;&lt;a href="/<span data-bind="text: lowerCasePluralResourceName"></span>"&gt;&amp;larr; Back to <span data-bind="text: lowerCasePluralResourceName"></span>&lt;/a&gt;&lt;/p&gt;
+        &lt;hr&gt;
+        &lt;header&gt;
+          &lt;h1&gt;&#123;&#123;data.<span data-bind="text: lowerCaseResourceName"></span>.<span data-bind="text: recordOneNameLowerCase"></span>&#125;&#125;&lt;/h1&gt;
+        &lt;/header&gt;
+        &lt;div class="row"&gt;
+          &lt;div class="col-md-6 col-lg-6"&gt;
+            &#123;&#123;&#35;if data.<span data-bind="text: lowerCaseResourceName"></span>.<span data-bind="text: recordFiveNameLowerCase"></span>&#125;&#125;
+              &lt;img src="&#123;&#123;cloudinaryUrl data.<span data-bind="text: lowerCaseResourceName"></span>.<span data-bind="text: recordFiveNameLowerCase"></span> crop='fit'&#125;&#125;" class="img-responsive"&gt;
+            &#123;&#123;/if&#125;&#125;
+          &lt;/div&gt;
+          &lt;div class="col-md-6 col-lg-6"&gt;
+            &lt;ul class="list-group"&gt;
+              &lt;li class="list-group-item"&gt;&lt;strong&gt;Price: &lt;/strong&gt;&#123;&#123;data.<span data-bind="text: lowerCaseResourceName"></span>.<span data-bind="text: recordTwoNameLowerCase"></span>&#125;&#125;&lt;/li&gt;
+              &lt;li class="list-group-item"&gt;&lt;strong&gt;QTY: &lt;/strong&gt;&#123;&#123;data.<span data-bind="text: lowerCaseResourceName"></span>.<span data-bind="text: recordThreeNameLowerCase"></span>&#125;&#125;&lt;/li&gt;
+            &lt;/ul&gt;
+            &lt;div class="well"&gt;
+              &#123;&#123;data.<span data-bind="text: lowerCaseResourceName"></span>.<span data-bind="text: recordFourNameLowerCase"></span>&#125;&#125;
+            &lt;/div&gt;
+            &lt;a class="btn btn-success btn-block" href="/contact"&gt;Ask About This <span data-bind="text: upperCaseResourceName"></span>&lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/article&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+        <h2>Create Helper</h2>
+        <h3>Modify File</h3>
+        <h4>name-of-project/template/views/helpers/index.js</h4>
+        <pre><code>
+// Direct url link to a specific <span data-bind="text: lowerCaseResourceName"></span>
+_helpers.<span data-bind="text: lowerCaseResourceName"></span>Url = function (<span data-bind="text: lowerCaseResourceName"></span>Slug, options) {
+  return ('/<span data-bind="text: lowerCasePluralResourceName"></span>/' + <span data-bind="text: lowerCaseResourceName"></span>Slug);
+};
+</code></pre>
+        <h2>Create Drop down option</h2>
+        <h3>Modify File</h3>
+        <h4>name-of-project/models/enquiry.js</h4>
+        <pre><code>
+    { value: '<span data-bind="text: lowerCaseResourceName"></span>', label: 'Ask About A <span data-bind="text: upperCaseResourceName"></span>' },
+</code></pre>
+        <div class="jumbotron">
+            <h4>The code used here has been taken from the excelent tutorial by <a href="https://www.youtube.com/watch?v=DPXDFeUEk3g" target="_blank">Traversy Media</a></h4>
+        </div>
+    </div>
+    <script>
+    // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
+    function AppViewModel() {
+        this.resourceName = ko.observable("product");
+        this.menuName = ko.observable("Store");
+
+        this.lowerCasePluralResourceName = ko.computed(function() {
+            return this.resourceName().toLowerCase() + "s";
+        }, this);
+
+
+        this.lowerCaseResourceName = ko.computed(function() {
+            return this.resourceName().toLowerCase();
+        }, this);
+
+        this.upperCaseResourceName = ko.computed(function() {
+            firstPart = this.resourceName()[0].toUpperCase();
+            secondPart = this.resourceName().slice(1);
+            return firstPart + secondPart;
+        }, this);
+
+        this.upperCasePluralResourceName = ko.computed(function() {
+            firstPart = this.resourceName()[0].toUpperCase();
+            secondPart = this.resourceName().slice(1);
+            return firstPart + secondPart + "s";
+        }, this);
+
+        this.lowerCaseMenuName = ko.computed(function() {
+            return this.menuName().toLowerCase();
+        }, this);
+
+        this.recordOneName = ko.observable("title");
+        this.recordTwoName = ko.observable("price");
+        this.recordThreeName = ko.observable("qty");
+        this.recordFourName = ko.observable("description");
+        this.recordFiveName = ko.observable("image");
+        this.recordSixName = ko.observable("publishDate");
+
+        this.recordOneValue = ko.observable("{type: String, requried: true}");
+        this.recordTwoValue = ko.observable("{type: Number}");
+        this.recordThreeValue = ko.observable("{type: Number}");
+        this.recordFourValue = ko.observable("{type: Types.Html, wysiwyg: true, height: 300}");
+        this.recordFiveValue = ko.observable("{type: Types.CloudinaryImage}");
+        this.recordSixValue = ko.observable("{type: Date, default: Date.now}");
+
+        this.recordOneNameLowerCase = ko.computed(function() {
+            return this.recordOneName().toLowerCase();
+        }, this);
+
+
+        this.recordTwoNameLowerCase = ko.computed(function() {
+            return this.recordTwoName().toLowerCase();
+        }, this);
+
+
+        this.recordThreeNameLowerCase = ko.computed(function() {
+            return this.recordThreeName().toLowerCase();
+        }, this);
+
+
+        this.recordFourNameLowerCase = ko.computed(function() {
+            return this.recordFourName().toLowerCase();
+        }, this);
+
+
+        this.recordFiveNameLowerCase = ko.computed(function() {
+            return this.recordFiveName().toLowerCase();
+        }, this);
+
+
+        this.recordSixNameLowerCase = ko.computed(function() {
+            return this.recordSixName().toLowerCase();
+        }, this);
+
+    }
+
+    // Activates knockout.js
+    ko.applyBindings(new AppViewModel());
+    </script>
+</body>
+
+</html>
